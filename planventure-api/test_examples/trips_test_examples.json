@@ -1,0 +1,606 @@
+{
+  "auth_headers": {
+    "description": "Include this Authorization header in all authenticated requests",
+    "Authorization": "Bearer YOUR_ACCESS_TOKEN_HERE"
+  },
+  
+  "create_trip": {
+    "description": "POST /api/trips - Create a new trip",
+    "examples": {
+      "basic_trip": {
+        "destination": "Paris, France",
+        "start_date": "2024-07-15",
+        "end_date": "2024-07-22",
+        "description": "Summer vacation to explore the City of Light",
+        "budget": 2500.00,
+        "status": "planned"
+      },
+      
+      "trip_with_coordinates": {
+        "destination": "Tokyo, Japan",
+        "start_date": "2024-09-10",
+        "end_date": "2024-09-20",
+        "latitude": 35.6762,
+        "longitude": 139.6503,
+        "description": "Business trip with some sightseeing",
+        "budget": 4500.00,
+        "status": "planned"
+      },
+
+      "trip_with_auto_itinerary": {
+        "destination": "Bali, Indonesia",
+        "start_date": "2024-08-01",
+        "end_date": "2024-08-07",
+        "latitude": -8.3405,
+        "longitude": 115.0920,
+        "description": "Tropical beach vacation",
+        "budget": 2000.00,
+        "status": "planned",
+        "generate_itinerary": true
+      },
+
+      "cultural_trip_with_custom_itinerary": {
+        "destination": "Kyoto, Japan",
+        "start_date": "2024-09-15",
+        "end_date": "2024-09-20",
+        "latitude": 35.0116,
+        "longitude": 135.7681,
+        "description": "Cultural exploration of ancient temples and traditions",
+        "budget": 1800.00,
+        "status": "planned",
+        "generate_itinerary": true,
+        "destination_type": "cultural"
+      },
+
+      "mountain_adventure": {
+        "destination": "Swiss Alps, Switzerland",
+        "start_date": "2024-10-05",
+        "end_date": "2024-10-12",
+        "latitude": 46.5197,
+        "longitude": 7.9273,
+        "description": "Mountain hiking and scenic views",
+        "budget": 3500.00,
+        "status": "planned",
+        "generate_itinerary": true,
+        "destination_type": "mountain"
+      },
+
+      "city_break_auto_detect": {
+        "destination": "Amsterdam, Netherlands",
+        "start_date": "2024-07-10",
+        "end_date": "2024-07-13",
+        "latitude": 52.3676,
+        "longitude": 4.9041,
+        "description": "Short city break",
+        "budget": 900.00,
+        "status": "planned",
+        "generate_itinerary": true
+      }
+    },
+    
+    "validation_errors": {
+      "missing_required_fields": {
+        "destination": "Rome, Italy"
+      },
+      
+      "invalid_dates": {
+        "destination": "London, UK",
+        "start_date": "2024-05-01",
+        "end_date": "2024-04-30"
+      },
+      
+      "past_start_date": {
+        "destination": "Berlin, Germany",
+        "start_date": "2023-01-01",
+        "end_date": "2024-12-31"
+      },
+      
+      "invalid_coordinates": {
+        "destination": "Sydney, Australia",
+        "start_date": "2024-11-01",
+        "end_date": "2024-11-10",
+        "latitude": 95.0,
+        "longitude": -200.0
+      },
+      
+      "negative_budget": {
+        "destination": "Dubai, UAE",
+        "start_date": "2024-12-01",
+        "end_date": "2024-12-07",
+        "budget": -1000.00
+      },
+      
+      "invalid_status": {
+        "destination": "Mumbai, India",
+        "start_date": "2024-08-15",
+        "end_date": "2024-08-25",
+        "status": "invalid_status"
+      }
+    }
+  },
+  
+  "update_trip": {
+    "description": "PUT /api/trips/{trip_id} - Update an existing trip",
+    "examples": {
+      "update_destination": {
+        "destination": "Rome, Italy (Updated)"
+      },
+      
+      "update_dates": {
+        "start_date": "2024-08-10",
+        "end_date": "2024-08-20"
+      },
+      
+      "update_coordinates": {
+        "latitude": 41.9028,
+        "longitude": 12.4964
+      },
+      
+      "update_budget_and_description": {
+        "budget": 3000.00,
+        "description": "Updated: Extended stay with additional museum visits and day trips"
+      },
+      
+      "change_status_to_active": {
+        "status": "active"
+      },
+      
+      "complete_trip": {
+        "status": "completed",
+        "description": "Amazing trip! Highly recommend the local food tours."
+      },
+      
+      "cancel_trip": {
+        "status": "cancelled",
+        "description": "Had to cancel due to work emergency"
+      },
+      
+      "full_update": {
+        "destination": "Prague, Czech Republic",
+        "start_date": "2024-09-05",
+        "end_date": "2024-09-12",
+        "latitude": 50.0755,
+        "longitude": 14.4378,
+        "description": "Changed destination to Prague for better weather and lower costs",
+        "budget": 1800.00,
+        "status": "planned"
+      },
+      
+      "add_itinerary": {
+        "itinerary": [
+          {
+            "day": 1,
+            "date": "2024-09-05",
+            "activities": [
+              "Arrive at airport",
+              "Check into hotel",
+              "Walking tour of Old Town"
+            ]
+          },
+          {
+            "day": 2,
+            "date": "2024-09-06",
+            "activities": [
+              "Visit Prague Castle",
+              "Charles Bridge at sunset",
+              "Traditional Czech dinner"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  
+  "get_trips_query_parameters": {
+    "description": "GET /api/trips - Query parameters for filtering and pagination",
+    "examples": {
+      "all_trips": "GET /api/trips",
+      
+      "planned_trips_only": "GET /api/trips?status=planned",
+      
+      "completed_trips": "GET /api/trips?status=completed",
+      
+      "upcoming_trips": "GET /api/trips?upcoming=true",
+      
+      "paginated_results": "GET /api/trips?page=2&per_page=5",
+      
+      "filtered_and_paginated": "GET /api/trips?status=planned&page=1&per_page=10",
+      
+      "max_per_page": "GET /api/trips?per_page=100"
+    }
+  },
+  
+  "itinerary_management": {
+    "description": "Test examples for itinerary-related endpoints",
+    
+    "get_trip_itinerary": {
+      "description": "GET /api/trips/{trip_id}/itinerary - Get detailed itinerary",
+      "endpoint": "GET /api/trips/1/itinerary",
+      "auth_required": true,
+      "expected_response": {
+        "trip_id": 1,
+        "destination": "Paris, France",
+        "itinerary": [
+          {
+            "day": 1,
+            "date": "2024-07-15",
+            "day_of_week": "Monday",
+            "activities": [
+              {
+                "time": "10:00",
+                "activity": "Arrive in Paris, France",
+                "duration": "1 hour",
+                "type": "travel"
+              }
+            ]
+          }
+        ],
+        "summary": {
+          "total_days": 8,
+          "total_activities": 32,
+          "activity_types": ["travel", "meal", "exploration", "morning", "afternoon", "evening"],
+          "average_activities_per_day": 4.0
+        }
+      }
+    },
+
+    "generate_itinerary": {
+      "description": "POST /api/trips/{trip_id}/itinerary/generate - Generate itinerary for existing trip",
+      "examples": {
+        "basic_generation": {
+          "endpoint": "POST /api/trips/1/itinerary/generate",
+          "data": {},
+          "description": "Generate itinerary with auto-detected destination type"
+        },
+        
+        "specify_destination_type": {
+          "endpoint": "POST /api/trips/1/itinerary/generate",
+          "data": {
+            "destination_type": "beach",
+            "replace_existing": true
+          },
+          "description": "Generate beach-type itinerary, replacing existing"
+        },
+        
+        "cultural_itinerary": {
+          "endpoint": "POST /api/trips/2/itinerary/generate",
+          "data": {
+            "destination_type": "cultural",
+            "replace_existing": false
+          },
+          "description": "Generate cultural itinerary only if none exists"
+        },
+        
+        "mountain_adventure": {
+          "endpoint": "POST /api/trips/3/itinerary/generate",
+          "data": {
+            "destination_type": "mountain",
+            "replace_existing": true
+          },
+          "description": "Generate mountain adventure itinerary"
+        }
+      }
+    },
+
+    "get_itinerary_templates": {
+      "description": "GET /api/trips/itinerary/templates - Get available templates",
+      "endpoint": "GET /api/trips/itinerary/templates",
+      "auth_required": true,
+      "expected_response": {
+        "destination_types": ["city", "beach", "mountain", "cultural"],
+        "trip_styles": {
+          "relaxed": {
+            "activities_per_day": 2,
+            "pace": "slow",
+            "break_time": "extended",
+            "focus": ["relaxation", "leisure", "local_culture"]
+          },
+          "balanced": {
+            "activities_per_day": 3,
+            "pace": "moderate",
+            "break_time": "regular",
+            "focus": ["sightseeing", "culture", "food", "shopping"]
+          },
+          "adventurous": {
+            "activities_per_day": 4,
+            "pace": "fast",
+            "break_time": "minimal",
+            "focus": ["adventure", "sports", "exploration", "nightlife"]
+          },
+          "cultural": {
+            "activities_per_day": 3,
+            "pace": "moderate",
+            "break_time": "regular",
+            "focus": ["museums", "heritage", "traditions", "local_experiences"]
+          }
+        },
+        "description": {
+          "destination_types": "Available destination types for itinerary generation",
+          "trip_styles": "Available trip styles with their characteristics"
+        }
+      }
+    }
+  },
+
+  "test_scenarios": {
+    "description": "Complete test scenarios with step-by-step instructions",
+    
+    "scenario_1_create_and_manage_trip": {
+      "steps": [
+        {
+          "step": 1,
+          "action": "POST /api/trips",
+          "description": "Create a new trip with auto-generated itinerary",
+          "data": {
+            "destination": "Amsterdam, Netherlands",
+            "start_date": "2024-08-15",
+            "end_date": "2024-08-22",
+            "latitude": 52.3676,
+            "longitude": 4.9041,
+            "description": "Summer trip to explore canals and museums",
+            "budget": 2200.00,
+            "status": "planned",
+            "generate_itinerary": true
+          },
+          "expected_status": 201
+        },
+        {
+          "step": 2,
+          "action": "GET /api/trips/{trip_id}/itinerary",
+          "description": "Retrieve the generated itinerary",
+          "expected_status": 200
+        },
+        {
+          "step": 3,
+          "action": "PUT /api/trips/{trip_id}",
+          "description": "Update trip to active status",
+          "data": {
+            "status": "active"
+          },
+          "expected_status": 200
+        }
+      ]
+    },
+
+    "scenario_3_itinerary_generation_workflow": {
+      "description": "Test complete itinerary generation and management workflow",
+      "steps": [
+        {
+          "step": 1,
+          "action": "POST /api/trips",
+          "description": "Create trip without itinerary",
+          "data": {
+            "destination": "Santorini, Greece",
+            "start_date": "2024-09-01",
+            "end_date": "2024-09-08",
+            "latitude": 36.3932,
+            "longitude": 25.4615,
+            "description": "Greek island getaway",
+            "budget": 2800.00,
+            "status": "planned"
+          },
+          "expected_status": 201
+        },
+        {
+          "step": 2,
+          "action": "GET /api/trips/itinerary/templates",
+          "description": "Get available itinerary templates",
+          "expected_status": 200
+        },
+        {
+          "step": 3,
+          "action": "POST /api/trips/{trip_id}/itinerary/generate",
+          "description": "Generate beach-style itinerary",
+          "data": {
+            "destination_type": "beach",
+            "replace_existing": false
+          },
+          "expected_status": 200
+        },
+        {
+          "step": 4,
+          "action": "GET /api/trips/{trip_id}/itinerary",
+          "description": "Verify generated itinerary",
+          "expected_status": 200
+        },
+        {
+          "step": 5,
+          "action": "POST /api/trips/{trip_id}/itinerary/generate",
+          "description": "Try to regenerate without replace flag",
+          "data": {
+            "destination_type": "cultural",
+            "replace_existing": false
+          },
+          "expected_status": 409,
+          "expected_error": "Itinerary already exists"
+        },
+        {
+          "step": 6,
+          "action": "POST /api/trips/{trip_id}/itinerary/generate",
+          "description": "Force regenerate with cultural theme",
+          "data": {
+            "destination_type": "cultural",
+            "replace_existing": true
+          },
+          "expected_status": 200
+        }
+      ]
+    },
+
+    "scenario_4_destination_type_detection": {
+      "description": "Test automatic destination type detection",
+      "steps": [
+        {
+          "step": 1,
+          "action": "POST /api/trips",
+          "description": "Create beach destination (should auto-detect)",
+          "data": {
+            "destination": "Maldives Beach Resort",
+            "start_date": "2024-11-01",
+            "end_date": "2024-11-07",
+            "generate_itinerary": true
+          },
+          "expected_destination_type": "beach"
+        },
+        {
+          "step": 2,
+          "action": "POST /api/trips",
+          "description": "Create mountain destination (should auto-detect)",
+          "data": {
+            "destination": "Himalayas Base Camp",
+            "start_date": "2024-10-15",
+            "end_date": "2024-10-25",
+            "generate_itinerary": true
+          },
+          "expected_destination_type": "mountain"
+        },
+        {
+          "step": 3,
+          "action": "POST /api/trips",
+          "description": "Create cultural destination (should auto-detect)",
+          "data": {
+            "destination": "Historic Temple Complex, Angkor Wat",
+            "start_date": "2024-09-20",
+            "end_date": "2024-09-27",
+            "generate_itinerary": true
+          },
+          "expected_destination_type": "cultural"
+        },
+        {
+          "step": 4,
+          "action": "POST /api/trips",
+          "description": "Create city destination (default)",
+          "data": {
+            "destination": "London, UK",
+            "start_date": "2024-08-05",
+            "end_date": "2024-08-10",
+            "generate_itinerary": true
+          },
+          "expected_destination_type": "city"
+        }
+      ]
+    }
+  },
+  
+  "curl_examples": {
+    "description": "Ready-to-use curl commands for testing",
+    
+    "create_trip_with_itinerary": {
+      "command": "curl -X POST http://localhost:5000/api/trips \\\n  -H 'Content-Type: application/json' \\\n  -H 'Authorization: Bearer YOUR_TOKEN' \\\n  -d '{\n    \"destination\": \"Bali, Indonesia\",\n    \"start_date\": \"2024-08-01\",\n    \"end_date\": \"2024-08-07\",\n    \"description\": \"Beach vacation\",\n    \"budget\": 2000.00,\n    \"generate_itinerary\": true,\n    \"destination_type\": \"beach\"\n  }'"
+    },
+
+    "get_trip_itinerary": {
+      "command": "curl -X GET http://localhost:5000/api/trips/1/itinerary \\\n  -H 'Authorization: Bearer YOUR_TOKEN'"
+    },
+
+    "generate_itinerary": {
+      "command": "curl -X POST http://localhost:5000/api/trips/1/itinerary/generate \\\n  -H 'Content-Type: application/json' \\\n  -H 'Authorization: Bearer YOUR_TOKEN' \\\n  -d '{\n    \"destination_type\": \"cultural\",\n    \"replace_existing\": true\n  }'"
+    },
+
+    "get_itinerary_templates": {
+      "command": "curl -X GET http://localhost:5000/api/trips/itinerary/templates \\\n  -H 'Authorization: Bearer YOUR_TOKEN'"
+    }
+  },
+
+  "expected_responses": {
+    "successful_creation_with_itinerary": {
+      "status": 201,
+      "body": {
+        "message": "Trip created successfully",
+        "trip": {
+          "id": 1,
+          "destination": "Bali, Indonesia",
+          "start_date": "2024-08-01",
+          "end_date": "2024-08-07",
+          "itinerary": "[{\"day\": 1, \"date\": \"2024-08-01\", \"activities\": [...]}]"
+        },
+        "itinerary_summary": {
+          "total_days": 7,
+          "total_activities": 28,
+          "activity_types": ["travel", "meal", "exploration", "morning", "afternoon", "evening"],
+          "average_activities_per_day": 4.0
+        }
+      }
+    },
+
+    "itinerary_generated": {
+      "status": 200,
+      "body": {
+        "message": "Itinerary generated successfully",
+        "trip_id": 1,
+        "itinerary": [
+          {
+            "day": 1,
+            "date": "2024-08-01",
+            "day_of_week": "Thursday",
+            "activities": [
+              {
+                "time": "10:00",
+                "activity": "Arrive in Bali, Indonesia",
+                "duration": "1 hour",
+                "type": "travel"
+              },
+              {
+                "time": "11:00",
+                "activity": "Check into accommodation",
+                "duration": "30 minutes",
+                "type": "accommodation"
+              }
+            ]
+          }
+        ],
+        "summary": {
+          "total_days": 7,
+          "total_activities": 28,
+          "activity_types": ["travel", "meal", "exploration", "morning", "afternoon", "evening"],
+          "average_activities_per_day": 4.0
+        }
+      }
+    },
+
+    "itinerary_already_exists": {
+      "status": 409,
+      "body": {
+        "error": "Itinerary already exists",
+        "message": "Trip already has an itinerary. Set replace_existing to true to regenerate."
+      }
+    },
+
+    "itinerary_templates": {
+      "status": 200,
+      "body": {
+        "destination_types": ["city", "beach", "mountain", "cultural"],
+        "trip_styles": {
+          "relaxed": {
+            "activities_per_day": 2,
+            "pace": "slow",
+            "break_time": "extended",
+            "focus": ["relaxation", "leisure", "local_culture"]
+          },
+          "balanced": {
+            "activities_per_day": 3,
+            "pace": "moderate",
+            "break_time": "regular",
+            "focus": ["sightseeing", "culture", "food", "shopping"]
+          },
+          "adventurous": {
+            "activities_per_day": 4,
+            "pace": "fast",
+            "break_time": "minimal",
+            "focus": ["adventure", "sports", "exploration", "nightlife"]
+          },
+          "cultural": {
+            "activities_per_day": 3,
+            "pace": "moderate",
+            "break_time": "regular",
+            "focus": ["museums", "heritage", "traditions", "local_experiences"]
+          }
+        },
+        "description": {
+          "destination_types": "Available destination types for itinerary generation",
+          "trip_styles": "Available trip styles with their characteristics"
+        }
+      }
+    }
+  }
+}
