@@ -54,6 +54,15 @@ class Trip(BaseModel):
         # Convert decimal to float for JSON serialization
         if data.get('budget'):
             data['budget'] = float(data['budget'])
+        
+        # Parse itinerary JSON string back to object
+        if data.get('itinerary'):
+            try:
+                import json
+                data['itinerary'] = json.loads(data['itinerary'])
+            except (json.JSONDecodeError, TypeError):
+                data['itinerary'] = None
+        
         return data
     
     @property
